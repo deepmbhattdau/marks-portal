@@ -12,15 +12,20 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 8  # 8 hours
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
+import hashlib
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def get_password_hash(password):
-    return pwd_context.hash(password[:72])
+    password = hashlib.sha256(password.encode()).hexdigest()
+    return pwd_context.hash(password)
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password[:72], hashed_password)
+    plain_password = hashlib.sha256(plain_password.encode()).hexdigest()
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 def create_access_token(data: dict):
