@@ -18,7 +18,8 @@ FRONTEND_URL = "https://your-app.netlify.app"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL, "http://localhost:5173"],
+    #FRONTEND_URL, "http://localhost:5173"
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,13 +29,33 @@ app.add_middleware(
 
 @app.post("/auth/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+
     user = db.query(models.Student).filter(
         models.Student.student_id == form_data.username
     ).first()
-    if not user or not auth.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid student ID or password")
-    token = auth.create_access_token({"sub": user.student_id, "is_admin": user.is_admin})
-    return {"access_token": token, "token_type": "bearer", "is_admin": user.is_admin}
+
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    try:
+        valid = auth.verify_password(form_data.password, user.hashed_password)
+    except Exception as e:
+        print("VERIFY ERROR:", e)
+        raise HTTPException(status_code=500, detail="Password verification failed")
+
+    if not valid:
+        raise HTTPException(status_code=401, detail="Invalid password")
+
+    token = auth.create_access_token({
+        "sub": user.student_id,
+        "is_admin": user.is_admin
+    })
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "is_admin": user.is_admin
+    }
 
 # ─── Student Routes ───────────────────────────────────────────────────────────
 
