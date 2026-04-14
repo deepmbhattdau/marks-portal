@@ -15,7 +15,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Marks Portal API")
 
 # ─── Update this after deploying to Netlify ───────────────────────────────────
-FRONTEND_URL = "https://your-app.netlify.app"
+FRONTEND_URL = "datastructuresmarks.netlify.app"
 
 DEFAULT_ALLOWED_ORIGINS = [FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"]
 ENV_ALLOWED_ORIGINS = [
