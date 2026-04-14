@@ -2,7 +2,18 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 
-const MARK_FIELDS = ["insem1", "insem2", "insem3", "practical", "assignment", "endsem"];
+// ── Defined outside the component to prevent remounting ──
+const MARK_FIELDS = ["insem1", "insem2", "insem3", "assignment1", "assignment2", "lab1", "lab2", "midsem", "endsem"];
+
+const Inp = ({ val, onChange, placeholder, type = "text" }) => (
+  <input
+    type={type}
+    value={val}
+    onChange={(e) => onChange(e.target.value)}
+    placeholder={placeholder}
+    style={s.input}
+  />
+);
 
 const s = {
   page: {
@@ -137,41 +148,67 @@ export default function Admin() {
     API.get("/admin/students").then((r) => setStudents(r.data));
   }, []);
 
-  const logout = () => { sessionStorage.clear(); navigate("/login"); };
+  const logout = () => {
+    sessionStorage.clear();
+    navigate("/login");
+  };
 
   const flash = (m, isErr = false) => {
-    if (isErr) { setErr(m); setTimeout(() => setErr(""), 5000); }
-    else { setMsg(m); setTimeout(() => setMsg(""), 5000); }
+    if (isErr) {
+      setErr(m);
+      setTimeout(() => setErr(""), 5000);
+    } else {
+      setMsg(m);
+      setTimeout(() => setMsg(""), 5000);
+    }
+  };
+
+  const handleMarkChange = (field, value) => {
+    setManualMarks((prev) => ({
+      ...prev,
+      [field]: value === "" ? undefined : parseFloat(value),
+    }));
   };
 
   const importMarksExcel = async () => {
     if (!marksFileRef.current?.files[0] || !selectedSubject) {
-      flash("Please select a subject and an Excel file.", true); return;
+      flash("Please select a subject and an Excel file.", true);
+      return;
     }
     const form = new FormData();
     form.append("file", marksFileRef.current.files[0]);
     try {
       const r = await API.post(`/admin/import-excel?subject_code=${selectedSubject}`, form);
       const errCount = r.data.errors.length;
-      flash(`Done! Updated: ${r.data.updated}, Created: ${r.data.created}${errCount ? `, Errors: ${errCount} (check console)` : ""}`);
+      flash(
+        `Done! Updated: ${r.data.updated}, Created: ${r.data.created}${errCount ? `, Errors: ${errCount} (check console)` : ""}`
+      );
       if (r.data.errors.length) console.warn("Import errors:", r.data.errors);
-    } catch (e) { flash(e.response?.data?.detail || "Import failed", true); }
+    } catch (e) {
+      flash(e.response?.data?.detail || "Import failed", true);
+    }
   };
 
   const importStudentsExcel = async () => {
-    if (!studentsFileRef.current?.files[0]) { flash("Please select a file.", true); return; }
+    if (!studentsFileRef.current?.files[0]) {
+      flash("Please select a file.", true);
+      return;
+    }
     const form = new FormData();
     form.append("file", studentsFileRef.current.files[0]);
     try {
       const r = await API.post("/admin/bulk-create-students", form);
       flash(`Created: ${r.data.created}, Skipped (already exist): ${r.data.skipped}`);
       API.get("/admin/students").then((res) => setStudents(res.data));
-    } catch (e) { flash(e.response?.data?.detail || "Import failed", true); }
+    } catch (e) {
+      flash(e.response?.data?.detail || "Import failed", true);
+    }
   };
 
   const saveManualMarks = async () => {
     if (!manualStudentId || !manualSubject) {
-      flash("Fill in Student ID and select a subject.", true); return;
+      flash("Fill in Student ID and select a subject.", true);
+      return;
     }
     try {
       await API.put("/admin/marks", {
@@ -180,28 +217,29 @@ export default function Admin() {
         ...manualMarks,
       });
       flash("Marks saved successfully!");
-    } catch (e) { flash(e.response?.data?.detail || "Save failed", true); }
+    } catch (e) {
+      flash(e.response?.data?.detail || "Save failed", true);
+    }
   };
 
   const addSubject = async () => {
-    if (!subjCode || !subjName || !subjSem) { flash("Fill in all subject fields.", true); return; }
+    if (!subjCode || !subjName || !subjSem) {
+      flash("Fill in all subject fields.", true);
+      return;
+    }
     try {
-      await API.post(`/admin/subjects?code=${subjCode}&name=${encodeURIComponent(subjName)}&semester=${subjSem}`);
+      await API.post(
+        `/admin/subjects?code=${subjCode}&name=${encodeURIComponent(subjName)}&semester=${subjSem}`
+      );
       flash("Subject added!");
-      setSubjCode(""); setSubjName(""); setSubjSem("");
+      setSubjCode("");
+      setSubjName("");
+      setSubjSem("");
       API.get("/admin/subjects").then((r) => setSubjects(r.data));
-    } catch (e) { flash(e.response?.data?.detail || "Error adding subject", true); }
+    } catch (e) {
+      flash(e.response?.data?.detail || "Error adding subject", true);
+    }
   };
-
-  const Inp = ({ val, onChange, placeholder, type = "text" }) => (
-    <input
-      type={type}
-      value={val}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      style={s.input}
-    />
-  );
 
   return (
     <div style={s.page}>
@@ -212,35 +250,47 @@ export default function Admin() {
         </div>
 
         <div style={s.tabs}>
-          {[["import", "Excel Import"], ["marks", "Edit Marks"], ["subjects", "Subjects"], ["students", "Students"]].map(
-            ([key, label]) => (
-              <button key={key} style={s.tab(tab === key)} onClick={() => setTab(key)}>
-                {label}
-              </button>
-            )
-          )}
+          {[
+            ["import", "Excel Import"],
+            ["marks", "Edit Marks"],
+            ["subjects", "Subjects"],
+            ["students", "Students"],
+          ].map(([key, label]) => (
+            <button key={key} style={s.tab(tab === key)} onClick={() => setTab(key)}>
+              {label}
+            </button>
+          ))}
         </div>
 
         {msg && <div style={s.success}>{msg}</div>}
         {err && <div style={s.error}>{err}</div>}
 
         <div style={s.card}>
-          {/* ── EXCEL IMPORT TAB ── */}
+
+          {/* EXCEL IMPORT TAB */}
           {tab === "import" && (
             <div>
               <h2 style={s.h2}>Import marks from Excel</h2>
               <p style={s.note}>
                 Required columns:{" "}
-                <span style={s.code}>student_id, insem1, insem2, insem3, practical, assignment, endsem</span>
+                <span style={s.code}>
+                  student_id, insem1, insem2, insem3, assignment1, assignment2, lab1, lab2, midsem, endsem
+                </span>
                 <br />
                 Leave cells blank for marks not yet entered. Make sure to add the subject first.
               </p>
 
               <label style={s.label}>Select subject</label>
-              <select style={s.select} value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+              <select
+                style={s.select}
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+              >
                 <option value="">-- select subject --</option>
-                {subjects.map((s) => (
-                  <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                {subjects.map((subj) => (
+                  <option key={subj.code} value={subj.code}>
+                    {subj.name} ({subj.code})
+                  </option>
                 ))}
               </select>
 
@@ -251,13 +301,16 @@ export default function Admin() {
                 accept=".xlsx,.xls"
                 style={{ display: "block", marginTop: "4px", marginBottom: "0.75rem", fontSize: "14px" }}
               />
-              <button style={s.btn} onClick={importMarksExcel}>Upload &amp; Import</button>
+              <button style={s.btn} onClick={importMarksExcel}>Upload and Import</button>
 
               <hr style={s.hr} />
+
               <h2 style={s.h2}>Bulk create students from Excel</h2>
               <p style={s.note}>
-                Required columns: <span style={s.code}>student_id, name</span><br />
-                Optional: <span style={s.code}>email, division, password</span> — if password is blank, defaults to the student_id.
+                Required columns: <span style={s.code}>student_id, name</span>
+                <br />
+                Optional: <span style={s.code}>email, division, password</span> — if password is
+                blank, defaults to the student_id.
               </p>
               <input
                 ref={studentsFileRef}
@@ -269,12 +322,16 @@ export default function Admin() {
             </div>
           )}
 
-          {/* ── EDIT MARKS TAB ── */}
+          {/* EDIT MARKS TAB */}
           {tab === "marks" && (
             <div>
               <h2 style={s.h2}>Edit marks manually</h2>
               <label style={s.label}>Student ID</label>
-              <Inp val={manualStudentId} onChange={setManualStudentId} placeholder="e.g. 2021001" />
+              <Inp
+                val={manualStudentId}
+                onChange={setManualStudentId}
+                placeholder="e.g. 2021001"
+              />
               <label style={s.label}>Subject</label>
               <select
                 style={s.select}
@@ -282,26 +339,32 @@ export default function Admin() {
                 onChange={(e) => setManualSubject(e.target.value)}
               >
                 <option value="">-- select subject --</option>
-                {subjects.map((s) => (
-                  <option key={s.code} value={s.code}>{s.name} ({s.code})</option>
+                {subjects.map((subj) => (
+                  <option key={subj.code} value={subj.code}>
+                    {subj.name} ({subj.code})
+                  </option>
                 ))}
               </select>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr 1fr",
+                  gap: "0.75rem",
+                  marginBottom: "1rem",
+                }}
+              >
                 {MARK_FIELDS.map((f) => (
                   <div key={f}>
-                    <label style={{ ...s.label, fontSize: "12px", color: "#888780" }}>{f.toUpperCase()}</label>
+                    <label style={{ ...s.label, fontSize: "12px", color: "#888780" }}>
+                      {f.toUpperCase()}
+                    </label>
                     <input
                       type="number"
                       min="0"
                       max="100"
                       value={manualMarks[f] ?? ""}
-                      onChange={(e) =>
-                        setManualMarks((prev) => ({
-                          ...prev,
-                          [f]: e.target.value === "" ? undefined : parseFloat(e.target.value),
-                        }))
-                      }
+                      onChange={(e) => handleMarkChange(f, e.target.value)}
                       style={{ ...s.input, marginBottom: 0 }}
                     />
                   </div>
@@ -311,7 +374,7 @@ export default function Admin() {
             </div>
           )}
 
-          {/* ── SUBJECTS TAB ── */}
+          {/* SUBJECTS TAB */}
           {tab === "subjects" && (
             <div>
               <h2 style={s.h2}>Add subject</h2>
@@ -323,6 +386,7 @@ export default function Admin() {
                 placeholder="e.g. CS301"
                 style={s.input}
               />
+              <label style={s.label}>Subject name</label>
               <input
                 type="text"
                 value={subjName}
@@ -331,7 +395,6 @@ export default function Admin() {
                 style={s.input}
               />
               <label style={s.label}>Semester</label>
-              
               <input
                 type="number"
                 value={subjSem}
@@ -341,7 +404,9 @@ export default function Admin() {
               />
               <button style={s.btn} onClick={addSubject}>Add subject</button>
 
-              <h2 style={{ ...s.h2, marginTop: "1.5rem" }}>Existing subjects ({subjects.length})</h2>
+              <h2 style={{ ...s.h2, marginTop: "1.5rem" }}>
+                Existing subjects ({subjects.length})
+              </h2>
               <div style={{ overflowX: "auto" }}>
                 <table style={s.table}>
                   <thead>
@@ -365,7 +430,7 @@ export default function Admin() {
             </div>
           )}
 
-          {/* ── STUDENTS TAB ── */}
+          {/* STUDENTS TAB */}
           {tab === "students" && (
             <div>
               <h2 style={s.h2}>Students ({students.length})</h2>
@@ -383,7 +448,7 @@ export default function Admin() {
                       <tr key={st.student_id}>
                         <td style={s.tdMuted}>{st.student_id}</td>
                         <td style={s.td}>{st.name}</td>
-                        <td style={s.tdMuted}>{st.division || "—"}</td>
+                        <td style={s.tdMuted}>{st.division || "-"}</td>
                       </tr>
                     ))}
                   </tbody>
