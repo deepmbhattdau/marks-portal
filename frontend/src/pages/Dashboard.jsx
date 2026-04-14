@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+const MARK_FIELDS = [
+  "insem1",
+  "insem2",
+  "insem3",
+  "assignment1",
+  "assignment2",
+  "lab1",
+  "lab2",
+  "midsem",
+  "endsem",
+];
 
 const s = {
   page: {
@@ -69,12 +80,19 @@ const s = {
 };
 
 // 🔥 Helper to format labels nicely
-const formatLabel = (key) => {
-  return key
-    .replace(/([a-z])([0-9])/i, "$1 $2") // assignment1 → assignment 1
-    .replace(/_/g, " ")
-    .toUpperCase();
+const LABELS = {
+  insem1: "InSem 1",
+  insem2: "InSem 2",
+  insem3: "InSem 3",
+  assignment1: "Assignment 1",
+  assignment2: "Assignment 2",
+  lab1: "Lab 1",
+  lab2: "Lab 2",
+  midsem: "Mid Sem",
+  endsem: "End Sem",
 };
+
+const formatLabel = (key) => LABELS[key] || key.toUpperCase();
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -90,7 +108,7 @@ export default function Dashboard() {
     sessionStorage.clear();
     navigate("/login");
   };
-
+  console.log("MARKS DATA:", marks);
   return (
     <div style={s.page}>
       <div style={s.wrap}>
@@ -116,7 +134,7 @@ export default function Dashboard() {
             No marks available yet. Check back after results are published.
           </p>
         )}
-
+        
         {/* Marks Cards */}
         {marks.map((m, i) => (
           <div key={i} style={s.card}>
@@ -129,12 +147,18 @@ export default function Dashboard() {
             </div>
 
             <div style={s.grid}>
-              {Object.entries(m.marks || {}).map(([key, value]) => (
-                <div key={key} style={s.markBox}>
-                  <div style={s.markLabel}>{formatLabel(key)}</div>
-                  <div style={s.markValue(value)}>{value}</div>
-                </div>
-              ))}
+              {MARK_FIELDS.map((key) => {
+                const value = m[key]; // ✅ directly access from m
+
+                if (value === undefined || value === null) return null;
+
+                return (
+                  <div key={key} style={s.markBox}>
+                    <div style={s.markLabel}>{formatLabel(key)}</div>
+                    <div style={s.markValue(value)}>{value}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
