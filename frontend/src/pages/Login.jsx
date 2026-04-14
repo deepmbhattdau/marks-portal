@@ -8,47 +8,84 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "transparent",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%)",
+    backgroundSize: "400% 400%",
+    animation: "gradient 15s ease infinite",
     fontFamily: "system-ui, -apple-system, sans-serif",
     padding: "1.25rem",
+    position: "relative",
+    overflow: "hidden",
   },
+  // Animated background styles
+  animationKeyframes: `
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  `,
   card: {
-    background: "rgba(255, 255, 255, 0.88)",
+    background: "rgba(255, 255, 255, 0.95)",
     padding: "2.5rem",
-    borderRadius: "18px",
+    borderRadius: "20px",
     width: "100%",
-    maxWidth: "380px",
-    border: "1px solid #d7e2ee",
-    boxShadow: "0 14px 38px rgba(20, 44, 71, 0.11)",
-    backdropFilter: "blur(2px)",
+    maxWidth: "420px",
+    border: "2px solid rgba(255, 255, 255, 0.3)",
+    boxShadow: "0 25px 50px rgba(20, 44, 71, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+    backdropFilter: "blur(10px)",
+    position: "relative",
+    zIndex: 10,
   },
-  title: { margin: "0 0 0.25rem", fontSize: "23px", fontWeight: 600, color: "#17334f" },
-  subtitle: { color: "#5f7386", marginBottom: "1.75rem", fontSize: "14px" },
-  label: { fontSize: "13px", fontWeight: 600, display: "block", marginBottom: "5px", color: "#264866" },
+  logoContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "1.75rem",
+  },
+  logo: {
+    width: "auto",
+    height: "70px",
+    marginBottom: "1rem",
+    animation: "bounce 2s infinite",
+  },
+  title: { 
+    margin: 0, 
+    fontSize: "28px", 
+    fontWeight: 700, 
+    textAlign: "center",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    backgroundClip: "text",
+  },
+  subtitle: { color: "#6b7280", marginBottom: "1.75rem", fontSize: "14px", fontWeight: 500, textAlign: "center" },
+  label: { fontSize: "13px", fontWeight: 600, display: "block", marginBottom: "6px", color: "#374151" },
   input: {
     width: "100%",
-    padding: "11px 12px",
-    borderRadius: "10px",
-    border: "1px solid #c9d8e8",
-    background: "#f8fbff",
-    color: "#1d354f",
+    padding: "12px 14px",
+    borderRadius: "12px",
+    border: "2px solid #e5e7eb",
+    background: "#f9fafb",
+    color: "#1f2937",
     fontSize: "15px",
     marginBottom: "1rem",
     boxSizing: "border-box",
     outline: "none",
+    transition: "all 0.3s ease",
   },
-  error: { color: "#b23838", fontSize: "13px", marginBottom: "0.75rem" },
+  error: { color: "#dc2626", fontSize: "13px", marginBottom: "0.75rem", fontWeight: 500 },
   btn: {
     width: "100%",
-    padding: "11px",
-    borderRadius: "10px",
-    background: "linear-gradient(135deg, #1f5d93, #2f74b2)",
+    padding: "12px 16px",
+    borderRadius: "12px",
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     color: "#fff",
     fontWeight: 600,
     fontSize: "15px",
     border: "none",
     cursor: "pointer",
-    transition: "opacity 0.15s",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    boxShadow: "0 10px 25px rgba(102, 126, 234, 0.4)",
   },
 };
 
@@ -82,8 +119,22 @@ export default function Login() {
 
   return (
     <div style={styles.page}>
+      <style>{`
+        @keyframes gradient {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+      `}</style>
       <div style={styles.card}>
-        <h1 style={styles.title}>Student Portal</h1>
+        <div style={styles.logoContainer}>
+          <img src="/dau_logo.png" alt="DAU Logo" style={styles.logo} />
+          <h1 style={styles.title}>Student Portal</h1>
+        </div>
         <p style={styles.subtitle}>Sign in with your student ID and password</p>
         <form onSubmit={handleLogin}>
           <label style={styles.label}>Student ID</label>
