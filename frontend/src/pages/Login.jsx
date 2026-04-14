@@ -92,6 +92,7 @@ const styles = {
 export default function Login() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -146,14 +147,32 @@ export default function Login() {
             required
           />
           <label style={styles.label}>Password</label>
-          <input
-            style={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
+          <div style={{ position: "relative" }}>
+  <input
+    style={styles.input}
+    type={showPassword ? "text" : "password"}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="Enter your password"
+    required
+  />
+  
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    style={{
+      position: "absolute",
+      right: "12px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      cursor: "pointer",
+      fontSize: "13px",
+      color: "#667eea",
+      fontWeight: 600,
+    }}
+  >
+    {showPassword ? "Hide" : "Show"}
+  </span>
+</div>
           {error && <p style={styles.error}>{error}</p>}
           <button
             type="submit"
