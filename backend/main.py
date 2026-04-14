@@ -95,11 +95,18 @@ def get_my_marks(
             "subject_code": s.code,
             "subject_name": s.name,
             "semester": s.semester,
+            # ── match your actual DB column names ──
             "insem1": m.insem1,
             "insem2": m.insem2,
             "insem3": m.insem3,
-            "practical": m.practical,
-            "assignment": m.assignment,
+            "assignment1": m.assignment1,
+            "assignment2": m.assignment2,
+            "assignment3": m.assignment3,
+            "assignment4": m.assignment4,
+            "lab1": m.lab1,
+            "lab2": m.lab2,
+            "lab3": m.lab3,
+            "midsem": m.midsem,
             "endsem": m.endsem,
         })
     return result
@@ -120,8 +127,14 @@ class MarksUpdate(BaseModel):
     insem1: Optional[float] = None
     insem2: Optional[float] = None
     insem3: Optional[float] = None
-    practical: Optional[float] = None
-    assignment: Optional[float] = None
+    assignment1: Optional[float] = None
+    assignment2: Optional[float] = None
+    assignment3: Optional[float] = None
+    assignment4: Optional[float] = None
+    lab1: Optional[float] = None
+    lab2: Optional[float] = None
+    lab3: Optional[float] = None
+    midsem: Optional[float] = None
     endsem: Optional[float] = None
 
 
