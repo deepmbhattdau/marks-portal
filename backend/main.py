@@ -207,7 +207,7 @@ async def import_excel(
 ):
     contents = await file.read()
     df = pd.read_excel(io.BytesIO(contents))
-
+    df['student_id'] = df['student_id'].astype(str).str.strip()  # Ensure student_id is string and trimmed
     # Normalize column names
     df.columns = [c.strip().lower().replace(" ", "") for c in df.columns]
 
