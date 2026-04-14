@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
+import os
 import models, auth
 from database import get_db, engine
 import pandas as pd
@@ -16,10 +17,17 @@ app = FastAPI(title="Marks Portal API")
 # ─── Update this after deploying to Netlify ───────────────────────────────────
 FRONTEND_URL = "https://your-app.netlify.app"
 
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+if not ALLOWED_ORIGINS:
+    ALLOWED_ORIGINS = [FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"]
+
 app.add_middleware(
     CORSMiddleware,
-    #FRONTEND_URL, "http://localhost:5173"
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
