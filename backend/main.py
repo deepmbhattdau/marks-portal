@@ -17,17 +17,19 @@ app = FastAPI(title="Marks Portal API")
 # ─── Update this after deploying to Netlify ───────────────────────────────────
 FRONTEND_URL = "https://your-app.netlify.app"
 
-ALLOWED_ORIGINS = [
+DEFAULT_ALLOWED_ORIGINS = [FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"]
+ENV_ALLOWED_ORIGINS = [
     origin.strip()
     for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
     if origin.strip()
 ]
-if not ALLOWED_ORIGINS:
-    ALLOWED_ORIGINS = [FRONTEND_URL, "http://localhost:5173", "http://127.0.0.1:5173"]
+ALLOWED_ORIGINS = list(dict.fromkeys([*DEFAULT_ALLOWED_ORIGINS, *ENV_ALLOWED_ORIGINS]))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],   # allow everything (for testing)
+    # Credentials + wildcard origin is invalid per CORS spec.
+    # Use explicit frontend origins instead.
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -215,9 +217,13 @@ async def import_excel(
 ):
     contents = await file.read()
     df = pd.read_excel(io.BytesIO(contents))
-    df['student_id'] = df['student_id'].astype(str).str.strip()  # Ensure student_id is string and trimmed
-    # Normalize column names
-    df.columns = [c.strip().lower().replace(" ", "") for c in df.columns]
+
+    # Normalize column names first so templates like "Student ID" and "student_id" both work.
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+    if "student_id" not in df.columns:
+        raise HTTPException(status_code=400, detail="Excel must contain a 'student_id' column")
+
+    df["student_id"] = df["student_id"].astype(str).str.strip()
 
     subject = db.query(models.Subject).filter(models.Subject.code == subject_code).first()
     if not subject:
