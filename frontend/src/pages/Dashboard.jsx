@@ -2,16 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 
-const FIELDS = ["insem1", "insem2", "insem3", "practical", "assignment", "endsem"];
-const LABELS = {
-  insem1: "InSem 1",
-  insem2: "InSem 2",
-  insem3: "InSem 3",
-  practical: "Practical",
-  assignment: "Assignment",
-  endsem: "End Sem",
-};
-
 const s = {
   page: {
     minHeight: "100vh",
@@ -78,6 +68,14 @@ const s = {
   empty: { color: "#888780", fontSize: "14px" },
 };
 
+// 🔥 Helper to format labels nicely
+const formatLabel = (key) => {
+  return key
+    .replace(/([a-z])([0-9])/i, "$1 $2") // assignment1 → assignment 1
+    .replace(/_/g, " ")
+    .toUpperCase();
+};
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [marks, setMarks] = useState([]);
@@ -96,6 +94,7 @@ export default function Dashboard() {
   return (
     <div style={s.page}>
       <div style={s.wrap}>
+        {/* Header */}
         <div style={s.header}>
           <div>
             <h1 style={s.h1}>My Marks</h1>
@@ -106,13 +105,19 @@ export default function Dashboard() {
               </p>
             )}
           </div>
-          <button style={s.logoutBtn} onClick={logout}>Sign out</button>
+          <button style={s.logoutBtn} onClick={logout}>
+            Sign out
+          </button>
         </div>
 
+        {/* Empty state */}
         {marks.length === 0 && (
-          <p style={s.empty}>No marks available yet. Check back after results are published.</p>
+          <p style={s.empty}>
+            No marks available yet. Check back after results are published.
+          </p>
         )}
 
+        {/* Marks Cards */}
         {marks.map((m, i) => (
           <div key={i} style={s.card}>
             <div style={s.cardHeader}>
@@ -122,16 +127,14 @@ export default function Dashboard() {
               </div>
               <span style={s.semBadge}>Semester {m.semester}</span>
             </div>
+
             <div style={s.grid}>
-              {FIELDS.map(
-                (f) =>
-                  m[f] != null && (
-                    <div key={f} style={s.markBox}>
-                      <div style={s.markLabel}>{LABELS[f]}</div>
-                      <div style={s.markValue(m[f])}>{m[f]}</div>
-                    </div>
-                  )
-              )}
+              {Object.entries(m.marks || {}).map(([key, value]) => (
+                <div key={key} style={s.markBox}>
+                  <div style={s.markLabel}>{formatLabel(key)}</div>
+                  <div style={s.markValue(value)}>{value}</div>
+                </div>
+              ))}
             </div>
           </div>
         ))}

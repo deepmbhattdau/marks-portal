@@ -205,24 +205,31 @@ async def import_excel(
     admin=Depends(auth.require_admin),
     db: Session = Depends(get_db)
 ):
-    """
-    Excel columns required: student_id | insem1 | insem2 | insem3 | practical | assignment | endsem
-    Leave cells blank for marks not yet entered.
-    """
     contents = await file.read()
     df = pd.read_excel(io.BytesIO(contents))
-    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+
+    # Normalize column names
+    df.columns = [c.strip().lower().replace(" ", "") for c in df.columns]
 
     subject = db.query(models.Subject).filter(models.Subject.code == subject_code).first()
     if not subject:
-        raise HTTPException(status_code=404, detail="Subject not found. Add it first in the Subjects tab.")
+        raise HTTPException(status_code=404, detail="Subject not found")
 
     updated, created, errors = 0, 0, []
+
+    # Get valid DB columns dynamically
+    valid_columns = set(models.Marks.__table__.columns.keys())
+
     for _, row in df.iterrows():
         sid = str(row.get("student_id", "")).strip()
+
+        if not sid:
+            errors.append("Missing student_id")
+            continue
+
         student = db.query(models.Student).filter(models.Student.student_id == sid).first()
         if not student:
-            errors.append(f"Student '{sid}' not found — skipped")
+            errors.append(f"Student '{sid}' not found")
             continue
 
         mark = db.query(models.Marks).filter(
@@ -230,21 +237,39 @@ async def import_excel(
             models.Marks.subject_id == subject.id
         ).first()
 
-        fields = ["insem1", "insem2", "insem3", "practical", "assignment", "endsem"]
-        if mark:
-            for f in fields:
-                if f in row and pd.notna(row[f]):
-                    setattr(mark, f, float(row[f]))
-            updated += 1
-        else:
-            kwargs = {f: float(row[f]) if f in row and pd.notna(row[f]) else None for f in fields}
-            mark = models.Marks(student_id=student.id, subject_id=subject.id, **kwargs)
+        if not mark:
+            mark = models.Marks(
+                student_id=student.id,
+                subject_id=subject.id
+            )
             db.add(mark)
             created += 1
+        else:
+            updated += 1
+
+        for col in df.columns:
+            if col == "student_id":
+                continue
+
+            if col not in valid_columns:
+                # Ignore unknown column
+                continue
+
+            val = row[col]
+
+            if pd.notna(val):  # Ignore empty cells
+                try:
+                    setattr(mark, col, float(val))
+                except:
+                    errors.append(f"Invalid value for {col} (student {sid})")
 
     db.commit()
-    return {"updated": updated, "created": created, "errors": errors}
 
+    return {
+        "updated": updated,
+        "created": created,
+        "errors": errors
+    }
 
 @app.post("/admin/bulk-create-students")
 async def bulk_create_students(

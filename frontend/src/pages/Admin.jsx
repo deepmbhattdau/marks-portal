@@ -316,11 +316,29 @@ export default function Admin() {
             <div>
               <h2 style={s.h2}>Add subject</h2>
               <label style={s.label}>Subject code</label>
-              <Inp val={subjCode} onChange={setSubjCode} placeholder="e.g. CS301" />
-              <label style={s.label}>Subject name</label>
-              <Inp val={subjName} onChange={setSubjName} placeholder="e.g. Data Structures" />
+              <input
+                type="text"
+                value={subjCode}
+                onChange={(e) => setSubjCode(e.target.value)}
+                placeholder="e.g. CS301"
+                style={s.input}
+              />
+              <input
+                type="text"
+                value={subjName}
+                onChange={(e) => setSubjName(e.target.value)}
+                placeholder="e.g. Data Structures"
+                style={s.input}
+              />
               <label style={s.label}>Semester</label>
-              <Inp val={subjSem} onChange={setSubjSem} placeholder="e.g. 3" type="number" />
+              
+              <input
+                type="number"
+                value={subjSem}
+                onChange={(e) => setSubjSem(e.target.value)}
+                placeholder="e.g. 3"
+                style={s.input}
+              />
               <button style={s.btn} onClick={addSubject}>Add subject</button>
 
               <h2 style={{ ...s.h2, marginTop: "1.5rem" }}>Existing subjects ({subjects.length})</h2>
