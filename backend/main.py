@@ -218,12 +218,25 @@ async def import_excel(
     contents = await file.read()
     df = pd.read_excel(io.BytesIO(contents))
 
-    # Normalize column names first so templates like "Student ID" and "student_id" both work.
-    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
-    if "student_id" not in df.columns:
-        raise HTTPException(status_code=400, detail="Excel must contain a 'student_id' column")
+    # 🔥 Strong column normalization
+    df.columns = [
+        str(c).strip().lower().replace(" ", "").replace("_", "").replace("\t", "")
+        for c in df.columns
+    ]
 
+    # 🔥 Ensure student_id exists
+    if "studentid" not in df.columns:
+        raise HTTPException(status_code=400, detail="Excel must contain 'student_id' column")
+
+    # Rename to match DB field
+    df.rename(columns={"studentid": "student_id"}, inplace=True)
+
+    # Clean student_id
     df["student_id"] = df["student_id"].astype(str).str.strip()
+
+    # 🔥 Debug (optional - remove later)
+    print("Columns:", df.columns)
+    print(df.head())
 
     subject = db.query(models.Subject).filter(models.Subject.code == subject_code).first()
     if not subject:
@@ -231,7 +244,7 @@ async def import_excel(
 
     updated, created, errors = 0, 0, []
 
-    # Get valid DB columns dynamically
+    # 🔥 Valid DB columns
     valid_columns = set(models.Marks.__table__.columns.keys())
 
     for _, row in df.iterrows():
@@ -261,20 +274,26 @@ async def import_excel(
         else:
             updated += 1
 
+        # 🔥 Process columns
         for col in df.columns:
             if col == "student_id":
                 continue
 
-            if col not in valid_columns:
-                # Ignore unknown column
+            # match DB column names (remove underscores for comparison)
+            db_col = col
+
+            if db_col not in valid_columns:
                 continue
 
-            val = row[col]
+            val = row.get(col)
 
-            if pd.notna(val):  # Ignore empty cells
+            # 🔥 Proper value handling
+            if pd.notna(val) and str(val).strip() != "":
                 try:
-                    setattr(mark, col, float(val))
-                except:
+                    value = float(val)
+                    setattr(mark, db_col, value)
+                except Exception as e:
+                    print(f"Error parsing {col}={val} for {sid}")
                     errors.append(f"Invalid value for {col} (student {sid})")
 
     db.commit()
@@ -284,7 +303,6 @@ async def import_excel(
         "created": created,
         "errors": errors
     }
-
 @app.post("/admin/bulk-create-students")
 async def bulk_create_students(
     file: UploadFile = File(...),
