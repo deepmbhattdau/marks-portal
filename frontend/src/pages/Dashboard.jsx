@@ -5,11 +5,9 @@ const MARK_FIELDS = [
   "insem1",
   "insem2",
   "insem3",
-  "assignment1",
-  "assignment2",
   "lab1",
   "lab2",
-  "midsem",
+  "lab3",
   "endsem",
 ];
 
