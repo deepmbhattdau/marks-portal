@@ -100,11 +100,10 @@ const s = {
     transition: "all 0.3s ease",
     textAlign: "center",
   },
-  markLabel: { fontSize: "12px", color: "#6366f1", marginBottom: "4px", fontWeight: 600, textTransform: "uppercase" },
-  markValue: (val) => ({
+  markValue: () => ({
     fontSize: "24px",
     fontWeight: 700,
-    background: val >= 40 ? "linear-gradient(135deg, #10b981 0%, #059669 100%)" : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+    background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     backgroundClip: "text",
@@ -117,11 +116,9 @@ const LABELS = {
   insem1: "InSem 1",
   insem2: "InSem 2",
   insem3: "InSem 3",
-  assignment1: "Assignment 1",
-  assignment2: "Assignment 2",
   lab1: "Lab 1",
   lab2: "Lab 2",
-  midsem: "Mid Sem",
+  lab3: "Lab 3",
   endsem: "End Sem",
 };
 
