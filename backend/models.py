@@ -31,19 +31,19 @@ class Marks(Base):
     subject_id = Column(Integer, ForeignKey("subjects.id"))
 
     # Old marks (shown in red — old_endsem only shown if it has a value)
-    old_insem1 = Column(Float, nullable=True)
-    old_insem2 = Column(Float, nullable=True)
-    old_endsem = Column(Float, nullable=True)
+    old_insem1 = Column(String, nullable=True)
+    old_insem2 = Column(String, nullable=True)
+    old_endsem = Column(String, nullable=True)
 
     # New marks (shown in green)
-    insem1 = Column(Float, nullable=True)
-    insem2 = Column(Float, nullable=True)
-    endsem = Column(Float, nullable=True)
+    insem1 = Column(String, nullable=True)
+    insem2 = Column(String, nullable=True)
+    endsem = Column(String, nullable=True)
 
     # Labs
-    lab1 = Column(Float, nullable=True)
-    lab2 = Column(Float, nullable=True)
-    lab3 = Column(Float, nullable=True)
+    lab1 = Column(String, nullable=True)
+    lab2 = Column(String, nullable=True)
+    lab3 = Column(String, nullable=True)
 
     # Total
-    total = Column(Float, nullable=True)
+    total = Column(String, nullable=True)

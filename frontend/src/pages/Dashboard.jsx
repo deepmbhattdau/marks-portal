@@ -195,20 +195,22 @@ export default function Dashboard() {
                 if (value === undefined || value === null) return null;
 
                 const isOld = OLD_FIELDS.has(key);
-                const color = isOld ? "#dc2626" : "#16a34a"; // red for old, green for new
+                const isAB = typeof value === "string" && isNaN(Number(value)); // true for "AB", "MP" etc.
+                const color = (isOld || isAB) ? "#dc2626" : "#16a34a"; // red for old OR non-numeric
 
+                const showRed = isOld || isAB;
                 return (
                   <div key={key} style={{
                     ...s.markBox,
-                    border: `2px solid ${isOld ? "#fecaca" : "#bbf7d0"}`,        // red/green border
-                    background: isOld
-                      ? "linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%)"      // red tint bg
-                      : "linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 100%)",     // green tint bg
+                    border: `2px solid ${showRed ? "#fecaca" : "#bbf7d0"}`,
+                    background: showRed
+                      ? "linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%)"
+                      : "linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 100%)",
                   }}>
-                    <div style={{ fontSize: "12px", fontWeight: 600, color, marginBottom: "6px" }}>
+                    <div style={{ fontSize: "12px", fontWeight: 600, color: (isOld || isAB) ? "#dc2626" : "#16a34a", marginBottom: "6px" }}>
                       {formatLabel(key)}
                     </div>
-                    <div style={{ fontSize: "24px", fontWeight: 700, color }}>
+                    <div style={{ fontSize: "24px", fontWeight: 700, color: (isOld || isAB) ? "#dc2626" : "#16a34a" }}>
                       {value}
                     </div>
                   </div>
