@@ -121,16 +121,16 @@ class StudentCreate(BaseModel):
 class MarksUpdate(BaseModel):
     student_id: str
     subject_code: str
-    old_insem1: Optional[float] = None
-    old_insem2: Optional[float] = None
-    old_endsem: Optional[float] = None
-    insem1: Optional[float] = None
-    insem2: Optional[float] = None
-    endsem: Optional[float] = None
-    lab1: Optional[float] = None
-    lab2: Optional[float] = None
-    lab3: Optional[float] = None
-    total: Optional[float] = None
+    old_insem1: Optional[str] = None
+    old_insem2: Optional[str] = None
+    old_endsem: Optional[str] = None
+    insem1: Optional[str] = None
+    insem2: Optional[str] = None
+    endsem: Optional[str] = None
+    lab1: Optional[str] = None
+    lab2: Optional[str] = None
+    lab3: Optional[str] = None
+    total: Optional[str] = None
 
 
 @app.post("/admin/students")
@@ -208,10 +208,12 @@ def update_marks(
                 setattr(mark, field, val)
     else:
         mark = models.Marks(
-            student_id=student.id,
-            subject_id=subject.id,
-            insem1=data.insem1, insem2=data.insem2, insem3=data.insem3,
-            practical=data.practical, assignment=data.assignment, endsem=data.endsem,
+        student_id=student.id,
+        subject_id=subject.id,
+        old_insem1=data.old_insem1, old_insem2=data.old_insem2, old_endsem=data.old_endsem,
+        insem1=data.insem1, insem2=data.insem2, endsem=data.endsem,
+        lab1=data.lab1, lab2=data.lab2, lab3=data.lab3,
+        total=data.total,
         )
         db.add(mark)
     db.commit()
@@ -278,6 +280,7 @@ async def import_excel(
             updated += 1
 
         # ✅ Process each column
+        # ✅ Process each column
         for col in df.columns:
             if col == "student_id":
                 continue
@@ -287,13 +290,10 @@ async def import_excel(
 
             val = row[col]
 
-            # ✅ Proper NaN + value handling
             if pd.notna(val):
-                try:
-                    value = float(val)
-                    setattr(mark, col, value)
-                except Exception:
-                    errors.append(f"Invalid value for {col} (student {sid})")
+                str_val = str(val).strip()
+                if str_val and str_val.lower() != "nan":
+                    setattr(mark, col, str_val)  # store as string — works for "23.5" and "AB"
 
     # ✅ Force DB update
     db.commit()
