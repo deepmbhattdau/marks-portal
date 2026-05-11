@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import API from "../api";
 
 // ── Defined outside the component to prevent remounting ──
-const MARK_FIELDS = ["insem1", "insem2", "insem3", "assignment1", "assignment2", "lab1", "lab2", "midsem", "endsem"];
+const MARK_FIELDS = [
+  "old_insem1", "old_insem2", "old_endsem",
+  "insem1", "insem2", "endsem",
+  "lab1", "lab2", "lab3", "total"
+];
+
+const OLD_FIELDS = new Set(["old_insem1", "old_insem2", "old_endsem"]);
 
 const Inp = ({ val, onChange, placeholder, type = "text" }) => (
   <input
@@ -376,7 +382,11 @@ export default function Admin() {
               >
                 {MARK_FIELDS.map((f) => (
                   <div key={f}>
-                    <label style={{ ...s.label, fontSize: "12px", color: "#888780" }}>
+                    <label style={{
+                      ...s.label,
+                      fontSize: "12px",
+                      color: OLD_FIELDS.has(f) ? "#dc2626" : "#16a34a",  // red for old, green for new
+                    }}>
                       {f.toUpperCase()}
                     </label>
                     <input

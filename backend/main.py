@@ -99,15 +99,15 @@ def get_my_marks(
             "insem1": m.insem1,
             "insem2": m.insem2,
             "insem3": m.insem3,
-            "assignment1": m.assignment1,
-            "assignment2": m.assignment2,
-            "assignment3": m.assignment3,
-            "assignment4": m.assignment4,
             "lab1": m.lab1,
             "lab2": m.lab2,
             "lab3": m.lab3,
             "midsem": m.midsem,
             "endsem": m.endsem,
+            "old_insem1": m.old_insem1,
+            "old_insem2": m.old_insem2,
+            "old_endsem": m.old_endsem,
+            "total": m.total,
         })
     return result
 
@@ -124,18 +124,16 @@ class StudentCreate(BaseModel):
 class MarksUpdate(BaseModel):
     student_id: str
     subject_code: str
+    old_insem1: Optional[float] = None
+    old_insem2: Optional[float] = None
+    old_endsem: Optional[float] = None
     insem1: Optional[float] = None
     insem2: Optional[float] = None
-    insem3: Optional[float] = None
-    assignment1: Optional[float] = None
-    assignment2: Optional[float] = None
-    assignment3: Optional[float] = None
-    assignment4: Optional[float] = None
+    endsem: Optional[float] = None
     lab1: Optional[float] = None
     lab2: Optional[float] = None
     lab3: Optional[float] = None
-    midsem: Optional[float] = None
-    endsem: Optional[float] = None
+    total: Optional[float] = None
 
 
 @app.post("/admin/students")
@@ -205,8 +203,10 @@ def update_marks(
     ).first()
 
     if mark:
-        for field in ["insem1", "insem2", "insem3", "practical", "assignment", "endsem"]:
-            val = getattr(data, field)
+        for field in ["old_insem1", "old_insem2", "old_endsem",
+              "insem1", "insem2", "endsem",
+              "lab1", "lab2", "lab3", "total"]:
+            val = getattr(data, field, None)
             if val is not None:
                 setattr(mark, field, val)
     else:

@@ -30,22 +30,20 @@ class Marks(Base):
     student_id = Column(Integer, ForeignKey("students.id"))
     subject_id = Column(Integer, ForeignKey("subjects.id"))
 
-    # Insem
+    # Old marks (shown in red — old_endsem only shown if it has a value)
+    old_insem1 = Column(Float, nullable=True)
+    old_insem2 = Column(Float, nullable=True)
+    old_endsem = Column(Float, nullable=True)
+
+    # New marks (shown in green)
     insem1 = Column(Float, nullable=True)
     insem2 = Column(Float, nullable=True)
-    insem3 = Column(Float, nullable=True)
+    endsem = Column(Float, nullable=True)
 
-    # Assignments (multiple)
-    assignment1 = Column(Float, nullable=True)
-    assignment2 = Column(Float, nullable=True)
-    assignment3 = Column(Float, nullable=True)
-    assignment4 = Column(Float, nullable=True)
-
-    # Practicals / Labs
+    # Labs
     lab1 = Column(Float, nullable=True)
     lab2 = Column(Float, nullable=True)
     lab3 = Column(Float, nullable=True)
 
-    # Exams
-    midsem = Column(Float, nullable=True)
-    endsem = Column(Float, nullable=True)
+    # Total
+    total = Column(Float, nullable=True)

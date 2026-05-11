@@ -2,14 +2,19 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 const MARK_FIELDS = [
+  "old_insem1",
+  "old_insem2",
+  "old_endsem",
   "insem1",
   "insem2",
-  "insem3",
+  "endsem",
   "lab1",
   "lab2",
   "lab3",
-  "endsem",
+  "total",
 ];
+
+const OLD_FIELDS = new Set(["old_insem1", "old_insem2", "old_endsem"]);
 
 const s = {
   page: {
@@ -109,15 +114,17 @@ const s = {
   empty: { color: "#fff", fontSize: "16px", background: "rgba(255, 255, 255, 0.1)", padding: "2rem", borderRadius: "12px", textAlign: "center", backdropFilter: "blur(5px)" },
 };
 
-// 🔥 Helper to format labels nicely
 const LABELS = {
+  old_insem1: "InSem 1 (Old)",
+  old_insem2: "InSem 2 (Old)",
+  old_endsem: "End Sem (Old)",
   insem1: "InSem 1",
   insem2: "InSem 2",
-  insem3: "InSem 3",
+  endsem: "End Sem",
   lab1: "Lab 1",
   lab2: "Lab 2",
   lab3: "Lab 3",
-  endsem: "End Sem",
+  total: "Total",
 };
 
 const formatLabel = (key) => LABELS[key] || key.toUpperCase();
@@ -179,14 +186,31 @@ export default function Dashboard() {
 
             <div style={s.grid}>
               {MARK_FIELDS.map((key) => {
-                const value = m[key]; // ✅ directly access from m
+                const value = m[key];
 
+                // Hide old_endsem if no value exists
+                if (key === "old_endsem" && (value === undefined || value === null)) return null;
+
+                // Hide all others if no value too
                 if (value === undefined || value === null) return null;
 
+                const isOld = OLD_FIELDS.has(key);
+                const color = isOld ? "#dc2626" : "#16a34a"; // red for old, green for new
+
                 return (
-                  <div key={key} style={s.markBox}>
-                    <div style={s.markLabel}>{formatLabel(key)}</div>
-                    <div style={s.markValue(value)}>{value}</div>
+                  <div key={key} style={{
+                    ...s.markBox,
+                    border: `2px solid ${isOld ? "#fecaca" : "#bbf7d0"}`,        // red/green border
+                    background: isOld
+                      ? "linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%)"      // red tint bg
+                      : "linear-gradient(135deg, #f0fdf4 0%, #f0fdf4 100%)",     // green tint bg
+                  }}>
+                    <div style={{ fontSize: "12px", fontWeight: 600, color, marginBottom: "6px" }}>
+                      {formatLabel(key)}
+                    </div>
+                    <div style={{ fontSize: "24px", fontWeight: 700, color }}>
+                      {value}
+                    </div>
                   </div>
                 );
               })}
