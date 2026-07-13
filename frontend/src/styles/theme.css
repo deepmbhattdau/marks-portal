@@ -50,3 +50,426 @@ button:hover {
   filter: brightness(0.95);
   transform: translateY(-2px);
 }
+
+/* Formal university visual system */
+:root {
+  --ink: #17202c;
+  --navy: #102a43;
+  --navy-deep: #091d30;
+  --navy-soft: #234967;
+  --gold: #a78037;
+  --gold-pale: #e3d2a9;
+  --paper: #fffefa;
+  --canvas: #f3f1ec;
+  --line: #d9d6ce;
+  --muted: #66717f;
+  --success-formal: #2f684f;
+  --danger-formal: #9b3a3a;
+}
+
+body {
+  color: var(--ink);
+  background: var(--canvas);
+  animation: none;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(167, 128, 55, 0.25);
+  outline-offset: 2px;
+}
+
+button:hover {
+  filter: none;
+  transform: translateY(-1px);
+}
+
+/* Sign in */
+.login-page {
+  position: relative !important;
+  justify-content: flex-end !important;
+  padding: 4rem 9vw !important;
+  background: linear-gradient(90deg, var(--navy-deep) 0 48%, var(--canvas) 48% 100%) !important;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.login-page::before {
+  content: "ACADEMIC RECORDS";
+  position: absolute;
+  left: 8vw;
+  top: 50%;
+  width: 30vw;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 5vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  transform: translateY(-50%);
+}
+
+.login-page::after {
+  content: "Secure student information portal";
+  position: absolute;
+  left: 8vw;
+  top: calc(50% + 6rem);
+  color: var(--gold-pale);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.login-card {
+  width: min(100%, 440px) !important;
+  max-width: 440px !important;
+  margin: 0 3vw !important;
+  padding: 3rem 3.25rem !important;
+  background: var(--paper) !important;
+  border: 1px solid var(--line) !important;
+  border-top: 4px solid var(--gold) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 22px 55px rgba(15, 31, 46, 0.13) !important;
+  backdrop-filter: none !important;
+}
+
+.login-brand { margin-bottom: 2rem !important; }
+.login-brand img {
+  height: 62px !important;
+  margin-bottom: 0.75rem !important;
+  animation: none !important;
+}
+
+.institution-name {
+  display: block;
+  color: var(--gold);
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.login-card h1 {
+  margin-top: 0.55rem !important;
+  color: var(--navy) !important;
+  background: none !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.login-card > p {
+  color: var(--muted) !important;
+  margin-bottom: 1.8rem !important;
+  font-weight: 400 !important;
+}
+
+.login-card label,
+.admin-card label {
+  color: #344252 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.login-card input,
+.admin-card input:not([type="file"]),
+.admin-card select {
+  border: 1px solid #cbd1d7 !important;
+  border-radius: 2px !important;
+  background: #fff !important;
+  color: var(--ink) !important;
+  box-shadow: inset 0 1px 2px rgba(10, 30, 45, 0.03);
+}
+
+.login-card input { padding: 0.85rem 0.9rem !important; }
+.login-card input:focus,
+.admin-card input:focus,
+.admin-card select:focus { border-color: var(--gold) !important; }
+
+.login-card form > button,
+.admin-card button:not(.admin-tab) {
+  border: 1px solid var(--navy) !important;
+  border-radius: 2px !important;
+  background: var(--navy) !important;
+  box-shadow: none !important;
+  color: white !important;
+  letter-spacing: 0.025em;
+}
+
+.login-card form > button {
+  margin-top: 0.35rem;
+  padding: 0.9rem 1rem !important;
+}
+
+.login-card form > button:hover,
+.admin-card button:hover { background: var(--navy-soft) !important; }
+
+.login-card form span {
+  color: var(--navy-soft) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.02em;
+}
+
+/* Shared portal shell */
+.portal-page {
+  min-height: 100vh !important;
+  padding: 0 1.25rem 4rem !important;
+  background: var(--canvas) !important;
+  color: var(--ink);
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.portal-wrap {
+  width: 100%;
+  max-width: 1120px !important;
+}
+
+.portal-header {
+  margin-bottom: 2.25rem !important;
+  padding: 1.35rem 1.75rem !important;
+  background: var(--navy-deep) !important;
+  border: 0 !important;
+  border-bottom: 3px solid var(--gold) !important;
+  border-radius: 0 0 3px 3px !important;
+  box-shadow: 0 8px 24px rgba(12, 31, 47, 0.12);
+  backdrop-filter: none !important;
+}
+
+.portal-header img { height: 46px !important; }
+.portal-header h1 {
+  color: #fff !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.015em;
+}
+
+.header-kicker {
+  margin: 0 0 0.2rem;
+  color: var(--gold-pale);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.portal-header button {
+  padding: 0.65rem 1rem !important;
+  border: 1px solid rgba(255,255,255,0.45) !important;
+  border-radius: 2px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+}
+
+.portal-header button:hover {
+  border-color: var(--gold-pale) !important;
+  background: rgba(255,255,255,0.07) !important;
+}
+
+.student-dashboard .portal-header p:not(.header-kicker) {
+  color: rgba(255,255,255,0.72) !important;
+  font-weight: 400 !important;
+}
+
+.result-card {
+  margin-bottom: 1.25rem !important;
+  padding: 1.6rem 1.75rem !important;
+  background: var(--paper) !important;
+  border: 1px solid var(--line) !important;
+  border-left: 4px solid var(--navy) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 5px 18px rgba(24, 38, 51, 0.055) !important;
+}
+
+.result-card > div:first-child {
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 1rem !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.result-card > div:first-child > div span:first-child {
+  color: var(--navy) !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem !important;
+  font-weight: 600 !important;
+}
+
+.result-card > div:first-child > div span:last-child {
+  color: var(--muted) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.result-card > div:first-child > span {
+  padding: 0.32rem 0.65rem !important;
+  border: 1px solid var(--gold-pale) !important;
+  border-radius: 2px !important;
+  background: #f8f3e8 !important;
+  color: #755b29 !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.result-card > div:last-child {
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)) !important;
+  gap: 0 !important;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.mark-box {
+  min-height: 92px;
+  padding: 1rem 0.75rem !important;
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+}
+
+.mark-box > div:first-child {
+  color: var(--muted) !important;
+  font-size: 0.67rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.mark-box > div:last-child {
+  color: var(--navy) !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem !important;
+  font-weight: 600 !important;
+}
+
+/* Administration */
+.admin-page { background: #eeece7 !important; }
+.admin-title { display: flex; align-items: center; gap: 1rem; }
+.admin-title img { width: auto; }
+.admin-tabs {
+  gap: 0 !important;
+  margin-bottom: 1.25rem !important;
+  border-bottom: 1px solid #bfc4c7;
+}
+
+.admin-tab {
+  margin-bottom: -1px;
+  padding: 0.8rem 1.15rem !important;
+  border: 0 !important;
+  border-bottom: 3px solid transparent !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-weight: 600 !important;
+}
+
+.admin-tab.is-active {
+  border-bottom-color: var(--gold) !important;
+  background: var(--paper) !important;
+  color: var(--navy) !important;
+}
+
+.admin-card {
+  padding: 2rem 2.25rem !important;
+  background: var(--paper) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 7px 24px rgba(24, 38, 51, 0.07) !important;
+}
+
+.admin-card h2 {
+  margin-bottom: 1.3rem !important;
+  color: var(--navy) !important;
+  background: none !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem !important;
+  font-weight: 600 !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+.admin-card p {
+  border-left-color: var(--gold) !important;
+  border-radius: 0 !important;
+  background: #f5f3ee !important;
+  color: #53606d !important;
+}
+
+.admin-card code,
+.admin-card span[style*="monospace"] {
+  border-color: var(--gold-pale) !important;
+  border-radius: 2px !important;
+  background: #f6f0e3 !important;
+  color: #755b29 !important;
+}
+
+.admin-card input:not([type="file"]),
+.admin-card select { max-width: 640px; }
+
+.admin-card input[type="file"] {
+  max-width: 640px;
+  padding: 0.65rem;
+  border: 1px dashed #aeb5bb;
+  background: #faf9f6;
+}
+
+.admin-card hr { border-color: var(--line) !important; }
+.admin-card table { border: 1px solid var(--line); }
+.admin-card th {
+  padding: 0.8rem !important;
+  border-bottom: 2px solid var(--navy) !important;
+  background: #eef1f2 !important;
+  color: var(--navy) !important;
+  font-size: 0.69rem;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+.admin-card td { padding: 0.8rem !important; border-bottom-color: #e3e1dc !important; }
+.admin-card tbody tr:nth-child(even) { background: #faf9f6; }
+.admin-card tbody tr:hover { background: #f3f0e8; }
+
+@media (max-width: 760px) {
+  .login-page {
+    justify-content: center !important;
+    padding: 1.25rem !important;
+    background: var(--canvas) !important;
+  }
+  .login-page::before,
+  .login-page::after { display: none; }
+  .login-card { margin: 0 !important; padding: 2.25rem 1.5rem !important; }
+  .portal-page { padding-inline: 0.75rem !important; }
+  .portal-header { align-items: flex-start !important; padding: 1.1rem !important; }
+  .portal-header img { height: 38px !important; margin-right: 0.4rem !important; }
+  .portal-header h1 { font-size: 1.45rem !important; }
+  .student-dashboard .portal-header p:not(.header-kicker) { font-size: 0.75rem !important; }
+  .result-card { padding: 1.25rem !important; }
+  .result-card > div:first-child { align-items: flex-start !important; gap: 0.75rem; }
+  .result-card > div:first-child > span { white-space: nowrap; }
+  .admin-header { align-items: center !important; }
+  .admin-title img { display: none; }
+  .admin-tabs { overflow-x: auto; flex-wrap: nowrap !important; }
+  .admin-tab { flex: 0 0 auto; }
+  .admin-card { padding: 1.35rem !important; }
+  .admin-card div[style*="grid-template-columns"] { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 460px) {
+  .portal-header { gap: 1rem; }
+  .portal-header button { padding: 0.55rem 0.65rem !important; font-size: 0.75rem !important; }
+  .result-card > div:first-child { flex-direction: column; }
+  .result-card > div:last-child { grid-template-columns: 1fr 1fr !important; }
+  .admin-card div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

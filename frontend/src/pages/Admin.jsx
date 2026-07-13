@@ -268,30 +268,30 @@ export default function Admin() {
   };
 
   return (
-    <div style={s.page}>
-      <div style={s.wrap}>
-        <div style={s.header}>
-          <h1 style={s.h1}>Admin Panel</h1>
+    <div className="portal-page admin-page" style={s.page}>
+      <div className="portal-wrap" style={s.wrap}>
+        <header className="portal-header admin-header" style={s.header}>
+          <div className="admin-title"><img src="/dau_logo.png" alt="DAU Logo" /><div><p className="header-kicker">Academic Services</p><h1 style={s.h1}>Administration</h1></div></div>
           <button style={s.logoutBtn} onClick={logout}>Sign out</button>
-        </div>
+        </header>
 
-        <div style={s.tabs}>
+        <nav className="admin-tabs" style={s.tabs} aria-label="Administration sections">
           {[
             ["import", "Excel Import"],
             ["marks", "Edit Marks"],
             ["subjects", "Subjects"],
             ["students", "Students"],
           ].map(([key, label]) => (
-            <button key={key} style={s.tab(tab === key)} onClick={() => setTab(key)}>
+            <button key={key} className={tab === key ? "admin-tab is-active" : "admin-tab"} style={s.tab(tab === key)} onClick={() => setTab(key)}>
               {label}
             </button>
           ))}
-        </div>
+        </nav>
 
         {msg && <div style={s.success}>{msg}</div>}
         {err && <div style={s.error}>{err}</div>}
 
-        <div style={s.card}>
+        <main className="admin-card" style={s.card}>
 
           {/* EXCEL IMPORT TAB */}
           {tab === "import" && (
@@ -300,7 +300,7 @@ export default function Admin() {
               <p style={s.note}>
                 Required columns:{" "}
                 <span style={s.code}>
-                  student_id, insem1, insem2, insem3, assignment1, assignment2, lab1, lab2, midsem, endsem
+                  student_id, old_insem1, old_insem2, old_endsem, insem1, insem2, endsem, lab1, lab2, lab3, total
                 </span>
                 <br />
                 Leave cells blank for marks not yet entered. Make sure to add the subject first.
@@ -486,7 +486,7 @@ export default function Admin() {
               </div>
             </div>
           )}
-        </div>
+        </main>
       </div>
     </div>
   );

@@ -119,7 +119,7 @@ export default function Login() {
   };
 
   return (
-    <div style={styles.page}>
+    <div className="login-page" style={styles.page}>
       <style>{`
         @keyframes gradient {
           0% { background-position: 0% 50%; }
@@ -131,9 +131,10 @@ export default function Login() {
           50% { transform: translateY(-10px); }
         }
       `}</style>
-      <div style={styles.card}>
-        <div style={styles.logoContainer}>
+      <div className="login-card" style={styles.card}>
+        <div className="login-brand" style={styles.logoContainer}>
           <img src="/dau_logo.png" alt="DAU Logo" style={styles.logo} />
+          <span className="institution-name">Dhirubhai Ambani University</span>
           <h1 style={styles.title}>Student Portal</h1>
         </div>
         <p style={styles.subtitle}>Sign in with your student ID and password</p>

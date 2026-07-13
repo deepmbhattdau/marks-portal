@@ -143,16 +143,16 @@ export default function Dashboard() {
     sessionStorage.clear();
     navigate("/login");
   };
-  console.log("MARKS DATA:", marks);
-  return (
-    <div style={s.page}>
-      <div style={s.wrap}>
+    return (
+    <div className="portal-page student-dashboard" style={s.page}>
+      <div className="portal-wrap" style={s.wrap}>
         {/* Header */}
-        <div style={s.header}>
+        <header className="portal-header" style={s.header}>
           <div style={s.headerLeft}>
             <img src="/dau_logo.png" alt="DAU Logo" style={s.logo} />
             <div style={s.headerContent}>
-              <h1 style={s.h1}>My Marks</h1>
+              <p className="header-kicker">Student Portal</p>
+              <h1 style={s.h1}>Academic Record</h1>
               {user && (
                 <p style={s.meta}>
                   {user.name} · {user.student_id}
@@ -164,7 +164,7 @@ export default function Dashboard() {
           <button style={s.logoutBtn} onClick={logout}>
             Sign out
           </button>
-        </div>
+        </header>
 
         {/* Empty state */}
         {marks.length === 0 && (
@@ -175,7 +175,7 @@ export default function Dashboard() {
         
         {/* Marks Cards */}
         {marks.map((m, i) => (
-          <div key={i} style={s.card}>
+          <article key={i} className="result-card" style={s.card}>
             <div style={s.cardHeader}>
               <div>
                 <span style={s.subjectName}>{m.subject_name}</span>
@@ -200,7 +200,7 @@ export default function Dashboard() {
 
                 const showRed = isOld || isAB;
                 return (
-                  <div key={key} style={{
+                  <div key={key} className={`mark-box `} style={{
                     ...s.markBox,
                     border: `2px solid ${showRed ? "#fecaca" : "#bbf7d0"}`,
                     background: showRed
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 );
               })}
             </div>
-          </div>
+          </article>
         ))}
       </div>
     </div>
