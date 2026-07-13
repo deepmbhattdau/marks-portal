@@ -149,7 +149,7 @@ export default function Dashboard() {
         {/* Header */}
         <header className="portal-header" style={s.header}>
           <div style={s.headerLeft}>
-            <img src="/dau_logo.png" alt="DAU Logo" style={s.logo} />
+            <img src="/academic-results-logo.png" alt="Academic Results Portal logo" style={s.logo} />
             <div style={s.headerContent}>
               <p className="header-kicker">Student Portal</p>
               <h1 style={s.h1}>Academic Record</h1>

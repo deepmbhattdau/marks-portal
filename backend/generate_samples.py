@@ -22,9 +22,9 @@ def make_students_template():
 
     # Sample rows
     sample_rows = [
-        ["2021001", "Rahul Mehta", "rahul@college.edu", "A", ""],
-        ["2021002", "Priya Shah", "priya@college.edu", "B", ""],
-        ["2021003", "Arjun Patel", "arjun@college.edu", "A", "mypassword123"],
+        ["2021001", "Rahul Mehta", "2021001@students.example.org", "A", ""],
+        ["2021002", "Priya Shah", "2021002@students.example.org", "B", ""],
+        ["2021003", "Arjun Patel", "2021003@students.example.org", "A", "mypassword123"],
     ]
     for row in sample_rows:
         ws.append(row)
@@ -45,7 +45,7 @@ def make_marks_template():
     ws = wb.active
     ws.title = "Marks"
 
-    headers = ["student_id", "insem1", "insem2", "insem3", "practical", "assignment", "endsem"]
+    headers = ["student_id", "old_insem1", "old_insem2", "old_endsem", "insem1", "insem2", "endsem", "lab1", "lab2", "lab3", "total"]
     header_fill = PatternFill("solid", fgColor="185FA5")
     header_font = Font(bold=True, color="FFFFFF")
 
@@ -56,9 +56,9 @@ def make_marks_template():
         cell.alignment = Alignment(horizontal="center")
 
     sample_rows = [
-        ["2021001", 18, 20, "", 24, 9, 55],
-        ["2021002", 16, 19, 21, 22, "", 48],
-        ["2021003", 20, "", "", 25, 10, 60],
+        ["2021001", "", "", "", 18, 20, 52, 9, 10, 9, 118],
+        ["2021002", "", "", "", 16, 19, 48, 8, 9, 9, 109],
+        ["2021003", 12, 14, "", 20, 18, 55, 10, 9, 10, 122],
     ]
     for row in sample_rows:
         ws.append(row)

@@ -1,6 +1,10 @@
-# DAU Student Marks Portal
+# Academic Results Portal
 
-A full-stack academic marks portal for Dhirubhai Ambani University. Students can securely view published results, while administrators manage students, subjects, marks, and Excel imports.
+I built this portal as a marks viewer for a subject I supported as a Teaching Assistant (TA). It gives students a focused place to view published assessment results and provides an administrative workflow for managing students, subjects, marks, and Excel imports.
+
+## Why I built this
+
+I made this portal to publish and present the marks for a subject in which I worked as a Teaching Assistant. The initial goal was a simple, clear marks viewer for students; it then grew into a small full-stack system with protected student views, administrator tools, subject management, and repeatable Excel imports. The branding and sample data are intentionally generic so the project can be demonstrated or adapted without representing a real institution.
 
 > **Local development:** React + FastAPI + SQLite on your computer.  
 > **Hosted deployment:** React Static Site + FastAPI Web Service + PostgreSQL on Render.
@@ -118,7 +122,7 @@ FRONTEND_URL=http://127.0.0.1:5173
 python3 delete_all.py
 ```
 
-The reset creates the development administrator `202511015@dau.ac.in` with password `12345`. Never reuse this password in production.
+The reset creates the development administrator `admin@results.local` with password `12345`. Never reuse this password in production.
 
 Start FastAPI:
 

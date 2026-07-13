@@ -133,13 +133,13 @@ export default function Login() {
       `}</style>
       <div className="login-card" style={styles.card}>
         <div className="login-brand" style={styles.logoContainer}>
-          <img src="/dau_logo.png" alt="DAU Logo" style={styles.logo} />
-          <span className="institution-name">Dhirubhai Ambani University</span>
-          <h1 style={styles.title}>Student Portal</h1>
+          <img src="/academic-results-logo.png" alt="Academic Results Portal logo" style={styles.logo} />
+          <span className="institution-name">Academic Results Portal</span>
+          <h1 style={styles.title}>Results Portal</h1>
         </div>
         <p style={styles.subtitle}>Sign in with your student ID and password</p>
         <form onSubmit={handleLogin}>
-          <label style={styles.label}>Student ID</label>
+          <label style={styles.label}>Student or Admin ID</label>
           <input
             style={styles.input}
             value={id}

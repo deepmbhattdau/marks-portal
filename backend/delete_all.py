@@ -2,7 +2,7 @@ from database import SessionLocal, engine
 import models
 from auth import get_password_hash
 
-ADMIN_LOGIN = "202511015@dau.ac.in"
+ADMIN_LOGIN = "admin@results.local"
 ADMIN_PASSWORD = "12345"
 
 print("Dropping all tables...")
@@ -15,7 +15,7 @@ db = SessionLocal()
 try:
     admin = models.Student(
         student_id=ADMIN_LOGIN,
-        name="Administrator",
+        name="Portal Administrator",
         email=ADMIN_LOGIN,
         hashed_password=get_password_hash(ADMIN_PASSWORD),
         is_admin=True,

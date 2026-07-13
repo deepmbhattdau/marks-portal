@@ -271,7 +271,7 @@ export default function Admin() {
     <div className="portal-page admin-page" style={s.page}>
       <div className="portal-wrap" style={s.wrap}>
         <header className="portal-header admin-header" style={s.header}>
-          <div className="admin-title"><img src="/dau_logo.png" alt="DAU Logo" /><div><p className="header-kicker">Academic Services</p><h1 style={s.h1}>Administration</h1></div></div>
+          <div className="admin-title"><img src="/academic-results-logo.png" alt="Academic Results Portal logo" /><div><p className="header-kicker">Academic Services</p><h1 style={s.h1}>Administration</h1></div></div>
           <button style={s.logoutBtn} onClick={logout}>Sign out</button>
         </header>
 
